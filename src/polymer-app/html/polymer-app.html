@@ -1,0 +1,81 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="polymer-app">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <div class="container">
+            <h2>Hello [[prop1]]</h2>
+            <div class="row">
+                <button type="button" class="btn col-md-8 col-md-offset-2">ADD AN ITEM</button>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-md-2 col-md-offset-2 no-padding">
+                    <input type="text" class="form-control no-margin" placeholder="ENTER ITEM">
+                    <button class="btn btn-default dropdown-toggle column-button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        CHOOSE COLUMN
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li>COLUMN 1</li>
+                        <li>COLUMN 2</li>
+                    </ul>
+                    <button class="btn column-button">ADD ITEM</button>
+                    <label class="top-buffer">SEARCH AN ITEM</label>
+                    <input type="text" class="form-control no-margin" placeholder="SEARCH">
+                </div>
+                <div class="col-md-8">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">COLUMN 1</th>
+                                <th class="text-center">COLUMN 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                            <tr>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                            <tr>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                            <tr>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                            <tr>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'polymer-app',
+
+            properties: {
+                prop1: {
+                    type: String,
+                    value: 'polymer-app',
+                },
+            },
+
+        });
+    </script>
+</dom-module>
