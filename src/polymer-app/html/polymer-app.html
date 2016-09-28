@@ -1,4 +1,6 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="https://polygit2.appspot.com/components/polymer/polymer.html">
+<!-- import the iron-input custom element -->
+<link rel="import" href="https://polygit2.appspot.com/components/iron-input/iron-input.html">
 
 <dom-module id="polymer-app">
     <template>
@@ -8,57 +10,72 @@
             }
         </style>
         <div class="container">
-            <h2>Hello [[prop1]]</h2>
+
             <div class="row">
                 <button type="button" class="btn col-md-8 col-md-offset-2">ADD AN ITEM</button>
             </div>
             <div class="row top-buffer">
                 <div class="col-md-2 col-md-offset-2 no-padding">
-                    <input type="text" class="form-control no-margin" placeholder="ENTER ITEM">
-                    <button class="btn btn-default dropdown-toggle column-button" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        CHOOSE COLUMN
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li>COLUMN 1</li>
-                        <li>COLUMN 2</li>
-                    </ul>
-                    <button class="btn column-button">ADD ITEM</button>
-                    <label class="top-buffer">SEARCH AN ITEM</label>
-                    <input type="text" class="form-control no-margin" placeholder="SEARCH">
+                    <input is="iron-input" bind-value="{{insertValue}}" type="text" class="form-control no-margin"
+                           placeholder="ENTER ITEM">
+
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle column-button" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{columnSelectionText}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li class="dropdown-list-content" on-tap="onSelectColumn" column-index="1">COLUMN 1</li>
+                            <li class="dropdown-list-content" on-tap="onSelectColumn" column-index="2">COLUMN 2</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn column-button" on-tap="onAddItem">ADD ITEM</button>
+                    <label class="top-buffer">SEARCH AN ITEM:</label>
+                    <input is="iron-input" bind-value="{{searchString}}" type="text" class="form-control no-margin"
+                           placeholder="SEARCH">
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-3 no-padding-right">
                     <table class="table table-striped">
                         <thead>
-                            <tr>
-                                <th class="text-center">COLUMN 1</th>
-                                <th class="text-center">COLUMN 2</th>
-                            </tr>
+                        <tr>
+                            <th class="text-center">COLUMN 1</th>
+                        </tr>
                         </thead>
                         <tbody>
+                        <template id="idOfColumn1" is="dom-repeat" items="{{column1}}" filter="isMatch"
+                                  observe="search item.search">
                             <tr>
-                                <td>Item</td>
-                                <td>Item</td>
+                                <td>{{item}} <span class="glyphicon glyphicon-remove row-button"
+                                                   on-tap="onDeleteItem"
+                                                   item-value="{{item}}"
+                                                   item-index="1"></span></td>
                             </tr>
-                            <tr>
-                                <td>Item</td>
-                                <td>Item</td>
-                            </tr>
-                            <tr>
-                                <td>Item</td>
-                                <td>Item</td>
-                            </tr>
-                            <tr>
-                                <td>Item</td>
-                                <td>Item</td>
-                            </tr>
-                            <tr>
-                                <td>Item</td>
-                                <td>Item</td>
-                            </tr>
+                        </template>
                         </tbody>
                     </table>
 
+                </div>
+                <div class="col-md-3 no-padding-right">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="text-center">COLUMN 2</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template id="idOfColumn2" is="dom-repeat" items="{{column2}}" filter="isMatch"
+                                  observe="search item.search">
+                            <tr>
+                                <td>{{item}} <span class="glyphicon glyphicon-remove row-button"
+                                                   on-tap="onDeleteItem"
+                                                   item-value="{{item}}"
+                                                   item-index="2"></span></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -70,11 +87,94 @@
             is: 'polymer-app',
 
             properties: {
-                prop1: {
+                searchString: {
                     type: String,
-                    value: 'polymer-app',
+                    value: '',
+                    observer: "onSearchStringChange"
                 },
+                insertValue: {
+                    type: String,
+                    value: ''
+                },
+                columnSelection: {
+                    type: Number,
+                    value: ''
+                },
+                columnSelectionText: {
+                    type: String,
+                    value: 'CHOOSE COLUMN'
+                }
             },
+            onSearchStringChange: function (newValue) {
+                this.$.idOfColumn1.render();
+                this.$.idOfColumn2.render();
+            },
+            ready: function () {
+                this.column1 = [
+                    'item#1',
+                    'item#2',
+                    'item#3',
+                    'item#4',
+                    'item#5'
+                ];
+                this.column2 = [
+                    'item#1',
+                    'item#2',
+                    'item#3',
+                    'item#4',
+                    'item#5'
+                ];
+            },
+
+            onDeleteItem: function (dom) {
+                var value = arguments[0].target.itemValue,
+                        columnNum = arguments[0].target.attributes[1].value, index;
+                if (columnNum == 1) {
+                    index = this.column1.indexOf(value);
+                    this.splice('column1', index, 1);
+                } else {
+                    index = this.column2.indexOf(value);
+                    this.splice('column2', index, 1);
+                }
+            },
+
+            onAddItem: function () {
+                var insertValue = this.get('insertValue'),
+                        selectedColumn = this.get('columnSelection');
+                if (selectedColumn && insertValue) {
+                    if (selectedColumn == 1)
+                        this.push('column1', insertValue);
+                    else
+                        this.push('column2', insertValue);
+                    this.set('insertValue', '');
+                    this.set('columnSelectionText', 'CHOOSE COLUMN');
+                    this.set('columnSelection', '');
+                } else if (!insertValue) {
+                    alert('Please input insert value.');
+                }
+                else if (!selectedColumn) {
+                    alert('Please choose a column.');
+                }
+            },
+
+            onSelectColumn: function (event) {
+                var value = event.target.attributes[1].value;
+                if (value == 1) {
+                    this.set('columnSelectionText', 'COLUMN 1');
+                    this.set('columnSelection', 1);
+                } else {
+                    this.set('columnSelectionText', 'COLUMN 2');
+                    this.set('columnSelection', 2);
+                }
+            },
+
+            isMatch: function (item) {
+                var searchString = this.get('searchString');
+                if (!searchString)
+                    return true;
+                else
+                    return item.indexOf(searchString) > -1;
+            }
 
         });
     </script>
