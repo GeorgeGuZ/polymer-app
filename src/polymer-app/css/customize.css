@@ -30,3 +30,17 @@
     margin-left: 20px;
     cursor: pointer;
 }
+.top-bar {
+    background-image: -moz-linear-gradient( 90deg, rgb(73,84,104) 0%, rgb(184,200,219) 100%);
+    background-image: -webkit-linear-gradient( 90deg, rgb(73,84,104) 0%, rgb(184,200,219) 100%);
+    background-image: -ms-linear-gradient( 90deg, rgb(73,84,104) 0%, rgb(184,200,219) 100%);
+    color: white;
+}
+
+.top-bar-height{
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+}
+
+
